@@ -4,6 +4,26 @@ import time
 import metapy
 import pytoml
 
+class InL2Ranker(metapy.index.RankingFunction):
+    """
+    Create a new ranking function in Python that can be used in MeTA.
+    """
+    def __init__(self, some_param=1.0):
+        self.param = some_param
+        # You *must* call the base class constructor here!
+        super(InL2Ranker, self).__init__()
+
+    def score_one(self, sd):
+        """
+        You need to override this function to return a score for a single term.
+        For fields available in the score_data sd object,
+        @see https://meta-toolkit.org/doxygen/structmeta_1_1index_1_1score__data.html
+        """
+        tfn = sd.doc_term_count * math.log(( 1 + sd.avg_dl/sd.doc_size),2)
+        c = 7
+        score = sd.query_term_weight * (tfn/(tfn + c)) * math.log( ((sd.num_docs + 1) / (sd.corpus_term_count + 0.5)) , 2)
+        #return (self.param + sd.doc_term_count) / (self.param * sd.doc_unique_terms + sd.doc_size)
+        return score
 
 def load_ranker(cfg_file):
     """
@@ -11,7 +31,8 @@ def load_ranker(cfg_file):
     The parameter to this function, cfg_file, is the path to a
     configuration file used to load the index.
     """
-    return metapy.index.DirichletPrior(210)
+    return InL2Ranker()
+
 
 if __name__ == '__main__':
     if len(sys.argv) != 2:
