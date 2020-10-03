@@ -31,7 +31,7 @@ def load_ranker(cfg_file):
     The parameter to this function, cfg_file, is the path to a
     configuration file used to load the index.
     """
-    return InL2Ranker()
+    return metapy.index.OkapiBM25(1.2,0.8,500)
 
 
 if __name__ == '__main__':
@@ -43,7 +43,7 @@ if __name__ == '__main__':
     print('Building or loading index...')
     idx = metapy.index.make_inverted_index(cfg)
 
-    #for mu in range (1,10,1):
+    #for mu in range (10,50,2):
     ranker = load_ranker(cfg)
     ev = metapy.index.IREval(cfg)
 
