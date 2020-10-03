@@ -25,13 +25,13 @@ class InL2Ranker(metapy.index.RankingFunction):
         #return (self.param + sd.doc_term_count) / (self.param * sd.doc_unique_terms + sd.doc_size)
         return score
 
-def load_ranker(cfg_file,mu):
+def load_ranker(cfg_file):
     """
     Use this function to return the Ranker object to evaluate, 
     The parameter to this function, cfg_file, is the path to a
     configuration file used to load the index.
     """
-    return metapy.index.OkapiBM25(mu,0.75,500)
+    return metapy.index.OkapiBM25(1.8,0.75,500)
 
 
 if __name__ == '__main__':
@@ -45,7 +45,7 @@ if __name__ == '__main__':
 
     #for mu in range (200,1000,100):
     mu = 1.8
-    ranker = load_ranker(cfg,mu)
+    ranker = load_ranker(cfg)
     ev = metapy.index.IREval(cfg)
 
     with open(cfg, 'r') as fin:
